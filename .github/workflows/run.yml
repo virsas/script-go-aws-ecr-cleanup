@@ -1,0 +1,35 @@
+name: Protect branches
+
+on:
+  schedule:
+    - cron:  '0 1 */2 * *'
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  protect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Echo secret
+        run: echo ${{ secrets.AWS_ECR_CLEANUP_SCRIPT_ID }}
+
+      - name: Protect branches
+        run: go run main.go
+        env:
+          AWS_ECR_CLEANUP_SCRIPT_ID: ${{ secrets.AWS_ECR_CLEANUP_SCRIPT_ID }}
+          AWS_ECR_CLEANUP_SCRIPT_KEY: ${{ secrets.AWS_ECR_CLEANUP_SCRIPT_KEY }}
+          AWS_ECR_CLEANUP_SCRIPT_REGION: ${{ secrets.AWS_ECR_CLEANUP_SCRIPT_REGION }}
