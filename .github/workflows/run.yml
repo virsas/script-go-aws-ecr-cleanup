@@ -1,4 +1,4 @@
-name: Protect branches
+name: ECR Image cleanup
 
 on:
   schedule:
@@ -24,10 +24,7 @@ jobs:
       - name: Download dependencies
         run: go mod download
 
-      - name: Echo secret
-        run: echo ${{ secrets.AWS_ECR_CLEANUP_SCRIPT_ID }}
-
-      - name: Protect branches
+      - name: Cleanup ecr images
         run: go run main.go
         env:
           AWS_ECR_CLEANUP_SCRIPT_ID: ${{ secrets.AWS_ECR_CLEANUP_SCRIPT_ID }}
