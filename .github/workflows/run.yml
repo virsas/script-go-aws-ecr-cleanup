@@ -2,12 +2,12 @@ name: ECR Image cleanup
 
 on:
   schedule:
-    - cron:  '0 1 */2 * *'
+    - cron: "0 1 * * 6"
   push:
     branches:
       - main
     paths-ignore:
-      - '**.md'
+      - "**.md"
 
 jobs:
   cleanup:
